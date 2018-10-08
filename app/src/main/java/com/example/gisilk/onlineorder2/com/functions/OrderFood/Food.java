@@ -4,25 +4,30 @@ public class Food {
 
 
 
-    private String name;
-    private String size;
+    private String name, size, fileName;
     private int price;
     private boolean availability;
-    private int thumbnail;
+
     public Food(){
     }
 
-    public int getThumbnail() {
-        return thumbnail;
-    }
-
-    public Food(String name, String size, int price, boolean availability, int thumbnail) {
+    public Food(String name, String size, int price, boolean availability, String filePath) {
         this.name = name;
         this.size = size;
         this.price = price;
         this.availability = availability;
-        this.thumbnail = thumbnail;
+        this.fileName = filePath;
+    }
 
+    public Food(String name, String size, int price, boolean availability) {
+        this.name = name;
+        this.size = size;
+        this.price = price;
+        this.availability = availability;
+    }
+
+    public String getFilePath() {
+        return fileName;
     }
 
     public String getName() {

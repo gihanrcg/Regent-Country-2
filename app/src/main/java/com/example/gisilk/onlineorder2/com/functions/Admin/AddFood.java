@@ -11,13 +11,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.gisilk.onlineorder2.R;
+import com.example.gisilk.onlineorder2.com.functions.OrderFood.Food;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -29,11 +33,14 @@ public class AddFood extends AppCompatActivity {
 
     private int REQUEST_CODE = 1;
     private static final int Galley_Intent = 2;
-    ImageView liquorImage;
-    Button btnUpload;
+    private ImageView liquorImage;
+    private Button btnUpload;
     private StorageReference mStorageref;
     private Uri filepath;
-
+    private String randomFileName, foodName, foodSize;
+    private int foodPrice;
+    private DatabaseReference databaseReference;
+    private EditText fdName, fdSize, fdPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +49,9 @@ public class AddFood extends AppCompatActivity {
 
         btnUpload = findViewById(R.id.btn_submit);
         mStorageref = FirebaseStorage.getInstance().getReference();
-
+        fdName = (EditText) findViewById(R.id.name);
+        fdSize = (EditText) findViewById(R.id.size);
+        fdPrice = (EditText) findViewById(R.id.price);
         liquorImage = (ImageView) findViewById(R.id.uploadImageView);
 
         liquorImage.setOnClickListener(new View.OnClickListener() {
@@ -68,11 +77,20 @@ public class AddFood extends AppCompatActivity {
                     progressDialog.setTitle("Uploading...");
                     progressDialog.show();
 
-                    StorageReference sref = mStorageref.child("Foods/"+ UUID.randomUUID().toString());
+                    randomFileName = UUID.randomUUID().toString();
+                    StorageReference sref = mStorageref.child("Foods/" + randomFileName);
                     Log.i("regent","sref : " + sref);
+
                     sref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            Log.i("regent","DONE");
+                            foodName = fdName.getText().toString();
+                            foodSize = fdSize.getText().toString();
+                            foodPrice = Integer.parseInt(fdPrice.getText().toString());
+                            databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Food");
+                            Food fd = new Food(foodName, foodSize, foodPrice,true, randomFileName);
+                            databaseReference.child(foodName).setValue(fd);
                             progressDialog.dismiss();
                             Toast.makeText(AddFood.this,"Done",Toast.LENGTH_SHORT);
                         }

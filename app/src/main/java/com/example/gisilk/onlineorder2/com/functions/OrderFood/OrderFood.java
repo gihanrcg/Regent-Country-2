@@ -124,7 +124,7 @@ public class OrderFood extends AppCompatActivity {
                     Log.i("food","FoodDetails.getSize() :" + foodDetails.getSize());
                     Log.i("food","FoodDetails.getPrice() :" + foodDetails.getPrice());
                     Log.i("food","FoodDetails.isAvailability() :" + foodDetails.isAvailability());
-                    Food a = new Food(foodDetails.getName(), foodDetails.getSize(), foodDetails.getPrice(),foodDetails.isAvailability(),covers[1]);
+                    Food a = new Food(foodDetails.getName(), foodDetails.getSize(), foodDetails.getPrice(),foodDetails.isAvailability());
                     albumList.add(a);
                 }
             }
