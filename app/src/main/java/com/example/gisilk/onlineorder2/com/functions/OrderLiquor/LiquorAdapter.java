@@ -54,7 +54,7 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
-        Liquor liquor = liquorList.get(position);
+        final Liquor liquor = liquorList.get(position);
         holder.title.setText(liquor.getName());
         holder.count.setText(liquor.getSize());
         this.testTitle = liquor.getName();
@@ -65,7 +65,9 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showPopupMenu(holder.overflow);
+
+                //Toast.makeText(mContext,"Name : "+ liquor.getName(),Toast.LENGTH_SHORT).show();
+                showPopupMenu(holder.overflow,liquor);
             }
         });
     }
@@ -73,12 +75,12 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
     /**
      * Showing popup menu when tapping on 3 dots
      */
-    private void showPopupMenu(View view) {
+    private void showPopupMenu(View view,Liquor liquor) {
         // inflate menu
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_liquor, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(liquor.getName()));
         popup.show();
     }
 
@@ -87,14 +89,17 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-        public MyMenuItemClickListener() {
+        String name;
+
+        public MyMenuItemClickListener(String name) {
+            this.name = name;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.orderNow:
-                    Toast.makeText(mContext, "Ordered  " + testTitle, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Ordered  " + name, Toast.LENGTH_SHORT).show();
                     return true;
 
                 default:
