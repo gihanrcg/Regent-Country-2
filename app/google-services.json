@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "102006929846",
+    "firebase_url": "https://onlineorder2-7fda7.firebaseio.com",
+    "project_id": "onlineorder2-7fda7",
+    "storage_bucket": "onlineorder2-7fda7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102006929846:android:50f1472fabd81d87",
+        "android_client_info": {
+          "package_name": "com.example.gisilk.onlineorder2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102006929846-bue01ghgdgahvn1eg6pkipr96uq4anc8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gisilk.onlineorder2",
+            "certificate_hash": "a40a8c482b3558004d5b8ae2ad354b816682af2f"
+          }
+        },
+        {
+          "client_id": "102006929846-efacisjog1de6ke9r2817kiv0l3v0928.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gisilk.onlineorder2",
+            "certificate_hash": "ed2f0d740e63a84a5b89dbac7cf6913ffa95e885"
+          }
+        },
+        {
+          "client_id": "102006929846-m6alj9sa89jjkr1efq5q0gc6n38qevof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gisilk.onlineorder2",
+            "certificate_hash": "3b097d56800bab28320be6ec1f6a7b9cd16bf5ef"
+          }
+        },
+        {
+          "client_id": "102006929846-shb0e8rortm9hegsn8tnvjnu11fdsj5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJWgOLPsJFLLuSRSLBg5FgVrmIn0nhwLo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102006929846-shb0e8rortm9hegsn8tnvjnu11fdsj5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

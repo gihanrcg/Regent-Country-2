@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/booking"
+            android:icon="@drawable/house"
+            android:title="Book rooms"
+            />
+        <item
+            android:id="@+id/orderFood"
+            android:icon="@drawable/food"
+            android:title="Order Food" />
+        <item
+            android:id="@+id/orderLiquor"
+            android:icon="@drawable/vine"
+            android:title="Order Liquor" />
+        <item
+            android:id="@+id/viewBill"
+            android:icon="@drawable/exit"
+            android:title="Checkout and ViewBilll" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+
+        </menu>
+    </item>
+
+</menu>
