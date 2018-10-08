@@ -47,7 +47,7 @@ public class OrderFood extends AppCompatActivity {
         initCollapsingToolbar();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Food");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Food/");
         albumList = new ArrayList<>();
         adapter = new FoodAdapter(this, albumList);
 
@@ -112,9 +112,11 @@ public class OrderFood extends AppCompatActivity {
 
 
         albumList.clear();
+        Log.i("food","TEST :");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("food","test :");
                 for(DataSnapshot foodSnapShot : dataSnapshot.getChildren()){
                     Log.i("food","values :" + foodSnapShot.getValue());
                     Food foodDetails = foodSnapShot.getValue(Food.class);
@@ -135,52 +137,7 @@ public class OrderFood extends AppCompatActivity {
             }
         });
 
-//
-//        for(int i = 0; i < 7;i++ ){
-//
-//            Food a = new Food("Noodles", "Test" + i * 1000, 100,true);
-//            albumList.add(a);
-//
-//        }
 
-//
-//        Liquor a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
 
         adapter.notifyDataSetChanged();
     }

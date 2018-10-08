@@ -23,6 +23,7 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
 
     private Context mContext;
     private List<Liquor> liquorList;
+    private String testTitle;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
@@ -56,6 +57,7 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
         Liquor liquor = liquorList.get(position);
         holder.title.setText(liquor.getName());
         holder.count.setText(liquor.getSize());
+        this.testTitle = liquor.getName();
 
         // loading album cover using Glide library
       //  Glide.with(mContext).load(liquor.getThumbnail()).into(holder.thumbnail);
@@ -92,7 +94,7 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.orderNow:
-                    Toast.makeText(mContext, "Ordered ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Ordered  " + testTitle, Toast.LENGTH_SHORT).show();
                     return true;
 
                 default:

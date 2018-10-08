@@ -45,7 +45,6 @@ public class OrderLiquor extends AppCompatActivity {
         initCollapsingToolbar();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Liquor");
         albumList = new ArrayList<>();
         adapter = new LiquorAdapter(this, albumList);
 
@@ -54,7 +53,6 @@ public class OrderLiquor extends AppCompatActivity {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-
         prepareAlbums();
 
         try {
@@ -118,27 +116,32 @@ public class OrderLiquor extends AppCompatActivity {
 
 
         albumList.clear();
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Liquor" );
+        Log.i("gihan", "Current user : ");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot liquorSnapshot : dataSnapshot.getChildren()){
-//                    Log.i("liquor","values :" + dataSnapshot.getValue());
-                    Liquor liquorDetails = liquorSnapshot.getValue(Liquor.class);
-//                    Liquor liquorDetailsWithDescription = new Liquor(liquorDetails.getName(), liquorDetails.getSize(), liquorDetails.getPrice(), liquorDetails.isAvailability());
-//                    albumList.add(liquorDetailsWithDescription);
-                    Log.i("liquor","liquorDetails.getName() :" + liquorDetails.getName());
-                    Liquor a = new Liquor(liquorDetails.getName(), liquorDetails.getSize(), liquorDetails.getPrice(),liquorDetails.isAvailability());
-                    albumList.add(a);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("gihan", "children : " + dataSnapshot.getChildren());
+                Log.i("gihan", "value : " + dataSnapshot.getValue());
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                    Liquor liquor = ds.getValue(Liquor.class);
+                    albumList.add(new Liquor(liquor.getName(),liquor.getSize(),liquor.getPrice(),liquor.isAvailability()));
                 }
+                adapter.notifyDataSetChanged();
+
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-//
-//
+
+
+
 //        for(int i = 0; i < 7;i++ ){
 //
 //            Liquor a = new Liquor("Jack Daniel", "Test" + i * 1000, 100,true);
@@ -146,46 +149,9 @@ public class OrderLiquor extends AppCompatActivity {
 //
 //        }
 
-//
-//        Liquor a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
-//
-//
-//         a = new Liquor("Jack Daniel", "Test", 100,true);
-//        albumList.add(a);
 
-        adapter.notifyDataSetChanged();
+
+
     }
 
     /**

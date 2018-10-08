@@ -21,17 +21,21 @@
             android:name=".com.functions.Home.HomePage"
             android:label="@string/title_activity_home_page"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".com.functions.OrderLiquor.OrderLiquor" />
-        <activity android:name=".com.functions.OrderFood.OrderFood"></activity>
-        <activity android:name=".com.functions.Admin.AddLiquor">
-
-        </activity>
-        <activity android:name=".com.functions.Admin.AddFood">
+        <activity android:name=".com.functions.OrderLiquor.OrderLiquor" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".com.functions.OrderFood.OrderFood">
+
+        </activity>
+        <activity android:name=".com.functions.Admin.AddLiquor">
+
+        </activity>
+        <activity android:name=".com.functions.Admin.AddFood">
+
         </activity>
     </application>
 

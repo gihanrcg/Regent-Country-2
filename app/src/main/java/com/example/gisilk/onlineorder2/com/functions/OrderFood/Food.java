@@ -24,7 +24,9 @@ public class Food {
         this.size = size;
         this.price = price;
         this.availability = availability;
+
     }
+
 
     public String getFilePath() {
         return fileName;

@@ -32,7 +32,7 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             count = (TextView) view.findViewById(R.id.count);
-            thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            //thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
             overflow = (ImageView) view.findViewById(R.id.overflow);
         }
     }
@@ -59,12 +59,21 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.MyViewHolder> 
         holder.count.setText(food.getSize());;
 
         // loading album cover using Glide library
+
 //        try {
 //            Glide.with(mContext).load(food.getThumbnail()).into(holder.thumbnail);
 //        }catch (Exception e){
 //            Log.i("Error",e.getMessage());
 //            e.printStackTrace();
 //        }
+
+        try {
+           // Glide.with(mContext).load(food.getThumbnail()).into(holder.thumbnail);
+        }catch (Exception e){
+            Log.i("Error",e.getMessage());
+            e.printStackTrace();
+        }
+
         holder.overflow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
