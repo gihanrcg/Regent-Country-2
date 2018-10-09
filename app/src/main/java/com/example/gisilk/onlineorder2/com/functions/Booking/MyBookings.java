@@ -29,7 +29,7 @@ import java.util.List;
 
 public class MyBookings extends AppCompatActivity {
 
-    private DatabaseReference dbRefForSpinner, dbFromSpinner;
+    private DatabaseReference dbRefForSpinner, dbFromSpinner, dbUpdateDelete;
     private Spinner dropdown;
     private boolean availability;
     private List<String> roomList;
@@ -38,7 +38,7 @@ public class MyBookings extends AppCompatActivity {
     private Activity context;
     private ValueEventListener mSendEventListner;
     private EditText noOfRooms, noOfNights, roomType;
-    private String spinnerValue, currentdate, current_uid;
+    private String spinnerValue, currentdate, current_uid, selectedItem;
     private Integer roomCount;
     private Integer nightCount;
     private Long availableRoomCount;
@@ -70,11 +70,11 @@ public class MyBookings extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.i("booking", "dataSnapshot : " + dataSnapshot);
+                roomList.clear();
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     roomList.add(ds.getKey());
                 }
                 setValuesToSpinner();
-                dbRefForSpinner.removeEventListener(valEvLisForSpinner);
             }
 
             @Override
@@ -87,14 +87,21 @@ public class MyBookings extends AppCompatActivity {
         dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                dbFromSpinner = FirebaseDatabase.getInstance().getReference("Users/" + current_uid + "/Booking/" + parentView.getSelectedItem());
+                selectedItem = parentView.getSelectedItem().toString();
+                dbFromSpinner = FirebaseDatabase.getInstance().getReference("Users/" + current_uid + "/Booking/" + selectedItem);
                 valEvLisFromSpinner = new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        Book bookDetails = dataSnapshot.getValue(Book.class);
-                        roomType.setText(bookDetails.getRoomType(), TextView.BufferType.EDITABLE);
-                        noOfRooms.setText(String.valueOf(bookDetails.getNoOfRooms()), TextView.BufferType.EDITABLE);
-                        noOfNights.setText(String.valueOf(bookDetails.getNoOfNights()), TextView.BufferType.EDITABLE);
+                        try{
+                            Book bookDetails = dataSnapshot.getValue(Book.class);
+                            roomType.setText(bookDetails.getRoomType(), TextView.BufferType.EDITABLE);
+                            noOfRooms.setText(String.valueOf(bookDetails.getNoOfRooms()), TextView.BufferType.EDITABLE);
+                            noOfNights.setText(String.valueOf(bookDetails.getNoOfNights()), TextView.BufferType.EDITABLE);
+                        }
+                        catch (Exception e){
+                            Log.i("booking", "Exception e : " + e.toString());
+                        }
+
                     }
 
                     @Override
@@ -114,19 +121,31 @@ public class MyBookings extends AppCompatActivity {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Book bookDetails = new Book(roomType.getText().toString(), Integer.valueOf(noOfNights.getText().toString()), Integer.valueOf(noOfRooms.getText().toString()));
+                dbUpdateDelete = FirebaseDatabase.getInstance().getReference("Users/" + current_uid + "/Booking/" + selectedItem);
+                dbUpdateDelete.setValue(bookDetails);
+            }
+        });
 
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbUpdateDelete = FirebaseDatabase.getInstance().getReference("Users/" + current_uid + "/Booking/" + selectedItem);
+                dbUpdateDelete.removeValue();
             }
         });
     }
 
     public void setValuesToSpinner(){
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, roomList);
+//        adapter.clear();
         dropdown.setAdapter(adapter);
     }
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
+        dbRefForSpinner.removeEventListener(valEvLisForSpinner);
         dbFromSpinner.addValueEventListener(valEvLisFromSpinner);
     }
 }
