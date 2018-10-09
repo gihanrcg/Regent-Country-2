@@ -2,9 +2,7 @@ package com.example.gisilk.onlineorder2.com.functions.OrderFood;
 
 public class Food {
 
-
-
-    private String name, size, fileName;
+    private String name, size, filePath;
     private int price;
     private boolean availability;
 
@@ -16,7 +14,7 @@ public class Food {
         this.size = size;
         this.price = price;
         this.availability = availability;
-        this.fileName = filePath;
+        this.filePath = filePath;
     }
 
     public Food(String name, String size, int price, boolean availability) {
@@ -29,7 +27,7 @@ public class Food {
 
 
     public String getFilePath() {
-        return fileName;
+        return filePath;
     }
 
     public String getName() {

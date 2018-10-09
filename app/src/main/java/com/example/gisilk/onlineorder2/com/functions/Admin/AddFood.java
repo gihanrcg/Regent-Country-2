@@ -19,6 +19,7 @@ import com.example.gisilk.onlineorder2.R;
 import com.example.gisilk.onlineorder2.com.functions.OrderFood.Food;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -77,22 +78,28 @@ public class AddFood extends AppCompatActivity {
                     progressDialog.setTitle("Uploading...");
                     progressDialog.show();
 
-                    randomFileName = UUID.randomUUID().toString();
-                    StorageReference sref = mStorageref.child("Foods/" + randomFileName);
+//                    randomFileName = UUID.randomUUID().toString();
+                    final StorageReference sref = mStorageref.child("Foods/" + randomFileName);
                     Log.i("regent","sref : " + sref);
 
                     sref.putFile(filepath).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            Log.i("regent","DONE");
-                            foodName = fdName.getText().toString();
-                            foodSize = fdSize.getText().toString();
-                            foodPrice = Integer.parseInt(fdPrice.getText().toString());
-                            databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Food");
-                            Food fd = new Food(foodName, foodSize, foodPrice,true, randomFileName);
-                            databaseReference.child(foodName).setValue(fd);
-                            progressDialog.dismiss();
-                            Toast.makeText(AddFood.this,"Done",Toast.LENGTH_SHORT);
+                            sref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    Log.i("regent","uri : " + uri.toString());
+                                    randomFileName = uri.toString();
+                                    foodName = fdName.getText().toString();
+                                    foodSize = fdSize.getText().toString();
+                                    foodPrice = Integer.parseInt(fdPrice.getText().toString());
+                                    databaseReference = FirebaseDatabase.getInstance().getReference("Hotel/Food");
+                                    Food fd = new Food(foodName, foodSize, foodPrice,true, randomFileName);
+                                    databaseReference.child(foodName).setValue(fd);
+                                    progressDialog.dismiss();
+                                    Toast.makeText(AddFood.this,"Done",Toast.LENGTH_SHORT);
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

@@ -130,6 +130,6 @@ public class Booking extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
+        dbRefForSpinner.removeEventListener(valEvLisForPush);
     }
 }
