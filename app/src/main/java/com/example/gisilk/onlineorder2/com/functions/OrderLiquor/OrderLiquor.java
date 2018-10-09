@@ -99,21 +99,6 @@ public class OrderLiquor extends AppCompatActivity {
      * Adding few albums for testing
      */
     private void prepareAlbums() {
-//        int[] covers = new int[]{
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//                R.drawable.liquor_cover,
-//        };
-
 
         albumList.clear();
 
@@ -130,27 +115,12 @@ public class OrderLiquor extends AppCompatActivity {
                     albumList.add(new Liquor(liquor.getName(),liquor.getSize(),liquor.getPrice(),liquor.isAvailability()));
                 }
                 adapter.notifyDataSetChanged();
-
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
-
-//        for(int i = 0; i < 7;i++ ){
-//
-//            Liquor a = new Liquor("Jack Daniel", "Test" + i * 1000, 100,true);
-//            albumList.add(a);
-//
-//        }
-
-
-
 
     }
 
@@ -199,4 +169,11 @@ public class OrderLiquor extends AppCompatActivity {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        LiquorAdapter.databaseReference.removeEventListener(LiquorAdapter.postListener);
+    }
+
 }

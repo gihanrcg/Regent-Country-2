@@ -2,9 +2,8 @@ package com.example.gisilk.onlineorder2.com.functions.OrderLiquor;
 
 public class Liquor {
 
-    private String name;
-    private String size;
-    private int price;
+    private String name, size, orderDateTime;
+    private int price, quantity;
     private boolean availability;
     //private int thumbnail;
 
@@ -19,6 +18,15 @@ public class Liquor {
     public Liquor() {
     }
 
+    public String getDateTime() {
+
+        return orderDateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.orderDateTime = dateTime;
+    }
+
     public Liquor(String name, String size, int price, boolean availability) {
         this.name = name;
         this.size = size;
@@ -29,6 +37,15 @@ public class Liquor {
     public String getName() {
 
         return name;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getQuantity() {
+
+        return quantity;
     }
 
     public void setName(String name) {

@@ -1,8 +1,10 @@
 package com.example.gisilk.onlineorder2.com.functions.OrderLiquor;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,15 +17,28 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import com.example.gisilk.onlineorder2.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
-public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHolder> {
+public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHolder>{
 
     private Context mContext;
     private List<Liquor> liquorList;
-    private String testTitle;
+    private String testTitle, key;
+    public static DatabaseReference databaseReference;
+    public static ValueEventListener postListener;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, count;
@@ -80,7 +95,7 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
         PopupMenu popup = new PopupMenu(mContext, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_liquor, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(liquor.getName()));
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(liquor));
         popup.show();
     }
 
@@ -89,17 +104,46 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
      */
     class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
-        String name;
+        Liquor liquor;
 
-        public MyMenuItemClickListener(String name) {
-            this.name = name;
+        public MyMenuItemClickListener(Liquor liquor) {
+            this.liquor = liquor;
         }
 
         @Override
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.orderNow:
-                    Toast.makeText(mContext, "Ordered  " + name, Toast.LENGTH_SHORT).show();
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    Date date = new Date();
+
+                    liquor.setQuantity(1);
+                    liquor.setDateTime(formatter.format(date));
+
+                    firebaseAuth = FirebaseAuth.getInstance();
+                    firebaseUser = firebaseAuth.getCurrentUser();
+                    String current_uid = "u2MnKhvoF2TzdScRubamMsfXKBE3";
+//                    String current_uid = firebaseUser.getUid();
+
+
+                    databaseReference = FirebaseDatabase.getInstance().getReference("Users/" + current_uid + "/Order");
+                    key = databaseReference.push().getKey();
+                    databaseReference.child(key).setValue(liquor);
+                    Toast.makeText(mContext, "Successfully Ordered", Toast.LENGTH_SHORT).show();
+
+//                    postListener = new ValueEventListener() {
+//                        @Override
+//                        public void onDataChange(DataSnapshot dataSnapshot) {
+//                            Log.i("ordernow", "dataSnapshot : " + dataSnapshot);
+//                        }
+//
+//                        @Override
+//                        public void onCancelled(DatabaseError databaseError) {
+//
+//                        }
+//                    };
+//                    databaseReference.addValueEventListener(postListener);
+
                     return true;
 
                 default:
@@ -112,4 +156,5 @@ public class LiquorAdapter extends RecyclerView.Adapter<LiquorAdapter.MyViewHold
     public int getItemCount() {
         return liquorList.size();
     }
+
 }
