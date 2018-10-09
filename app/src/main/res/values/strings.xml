@@ -74,6 +74,10 @@
     <string name="btn_liquor_managemnt">Liquor Management</string>
     <string name="submit">Submit</string>
     <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+
+
 
 
     <string name="action_example">Example action</string>
