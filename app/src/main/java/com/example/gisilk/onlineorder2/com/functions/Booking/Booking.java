@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.gisilk.onlineorder2.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,12 +27,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
 public class Booking extends AppCompatActivity {
 
-    private DatabaseReference databaseReference;
+    private DatabaseReference dbRefForSpinner, dbRefForPush;
     private Spinner dropdown;
     private boolean availability;
     private List<String> roomList;
@@ -39,11 +42,14 @@ public class Booking extends AppCompatActivity {
     private Activity context;
     private ValueEventListener mSendEventListner;
     private EditText noOfRooms, noofNights;
-    private String spinnerValue;
+    private String spinnerValue, currentdate;
     private Integer roomCount;
     private Integer nightCount;
     private Long availableRoomCount;
     private CalendarView calendarView ;
+    private ValueEventListener valEvLisForSpinner, valEvLisForPush;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +61,25 @@ public class Booking extends AppCompatActivity {
         noofNights = (EditText)findViewById(R.id.noofNights);
         roomList = new ArrayList<>();
         dropdown = findViewById(R.id.spinner1);
-        databaseReference =  FirebaseDatabase.getInstance().getReference("Hotel/Rooms");
+        dbRefForSpinner =  FirebaseDatabase.getInstance().getReference("Hotel/Rooms");
+
+        valEvLisForSpinner = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("booking", "dataSnapshot : " + dataSnapshot);
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    roomList.add(ds.getKey());
+                }
+                setValuesToSpinner();
+                dbRefForSpinner.removeEventListener(valEvLisForSpinner);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.i("booking", "error : " + databaseError);
+            }
+        };
+        dbRefForSpinner.addValueEventListener(valEvLisForSpinner);
 
         buttonAvailability.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -63,55 +87,36 @@ public class Booking extends AppCompatActivity {
                 roomCount = Integer.valueOf(noOfRooms.getText().toString());
                 nightCount = Integer.valueOf(noofNights.getText().toString());
                 spinnerValue = dropdown.getSelectedItem().toString();
-                CalendarView cv = (CalendarView)findViewById(R.id.calendarView);
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat ss = new SimpleDateFormat("dd-MM-yyyy");
-                Date date = new Date();
-                final String currentdate= ss.format(cv);
-                Log.i("booking", "currentDate : " +currentdate);
 
-                databaseReference =  FirebaseDatabase.getInstance().getReference("Hotel/Rooms/"+spinnerValue);
-                databaseReference.addValueEventListener(new ValueEventListener() {
+                dbRefForSpinner =  FirebaseDatabase.getInstance().getReference("Hotel/Rooms/"+spinnerValue);
+                valEvLisForPush = new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         Log.i("booking", "ds : " + dataSnapshot.child("availableRooms").getValue());
                         availableRoomCount = (Long) dataSnapshot.child("availableRooms").getValue();
                         if(availableRoomCount >= roomCount){
                             Log.i("booking", "ds : " + dataSnapshot.child("availableRooms").getValue());
+                            firebaseAuth = FirebaseAuth.getInstance();
+                            firebaseUser = firebaseAuth.getCurrentUser();
+                            String current_uid = "u2MnKhvoF2TzdScRubamMsfXKBE3";
+//                            String current_uid = firebaseUser.getUid();
+                            Book bbb = new Book(spinnerValue, roomCount, nightCount, currentdate);
 
-                            Book bbb = new Book(spinnerValue, roomCount, nightCount, currentdate, currentdate);
-                            databaseReference =  FirebaseDatabase.getInstance().getReference();
-                            String pathID = databaseReference.child("Users").child("qweqweqweqwe").push().getKey();
-                            databaseReference.child("Users").child("qweqweqweqwe").child(pathID).setValue(bbb);
-
-
-
+                            dbRefForPush = FirebaseDatabase.getInstance().getReference("Users/"+current_uid+"/Booking");
+                            String pathID = dbRefForPush.push().getKey();
+                            dbRefForPush.child(pathID).setValue(bbb);
                         }
                         else{
                             Toast.makeText(getApplicationContext(), "No Rooms Available", Toast.LENGTH_SHORT).show();
                         }
                     }
-                    @Override
-                    public void onCancelled(DatabaseError error) {
-                        // Failed to read value
-                        Log.i("booking", "error : " + error);
-                    }
-                });
-            }
-        });
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    roomList.add(ds.getKey());
-                }
-                setValuesToSpinner();
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.i("booking", "error : " + error);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.i("booking", "error : " + databaseError);
+                    }
+                };
+                dbRefForSpinner.addValueEventListener(valEvLisForPush);
             }
         });
 
@@ -120,5 +125,11 @@ public class Booking extends AppCompatActivity {
     public void setValuesToSpinner(){
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, roomList);
         dropdown.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
     }
 }

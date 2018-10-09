@@ -6,14 +6,12 @@ public class Book {
     private int noOfRooms;
     private int noOfNights;
     private String checkinDate;
-    private String checkoutDate;
 
-    public Book(String roomType, int noOfRooms, int noOfNights, String checkinDate, String checkoutDate) {
+    public Book(String roomType, int noOfRooms, int noOfNights, String checkinDate) {
         this.roomType = roomType;
         this.noOfRooms = noOfRooms;
         this.noOfNights = noOfNights;
         this.checkinDate = checkinDate;
-        this.checkoutDate = checkoutDate;
     }
 
     public String getRoomType() {
@@ -48,11 +46,4 @@ public class Book {
         this.checkinDate = checkinDate;
     }
 
-    public String getCheckoutDate() {
-        return checkoutDate;
-    }
-
-    public void setCheckoutDate(String checkoutDate) {
-        this.checkoutDate = checkoutDate;
-    }
 }
